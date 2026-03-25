@@ -3,6 +3,7 @@ from django.http import Http404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django import forms
+from django.db import IntegrityError  # ← добавлено для обработки ошибок уникальности
 
 from .models import Article
 from .forms import ArticleForm
@@ -24,17 +25,24 @@ def get_article(request, article_id):
 def create_post(request):
     if not request.user.is_authenticated:
         raise Http404
+    
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         if form.is_valid():
-            Article.objects.create(
-                title=form.cleaned_data['title'],
-                text=form.cleaned_data['text'],
-                author=request.user
-            )
-            return redirect('archive')
+            try:
+                Article.objects.create(
+                    title=form.cleaned_data['title'],
+                    text=form.cleaned_data['text'],
+                    author=request.user
+                )
+                return redirect('archive')
+            except IntegrityError:
+                # Ошибка уникальности: статья с таким заголовком уже есть у автора
+                form.add_error('title', 'Статья с таким заголовком уже существует у этого автора')
+        # Если форма невалидна, передаём её с ошибками
     else:
         form = ArticleForm()
+    
     return render(request, 'create_post.html', {'form': form})
 
 
@@ -92,4 +100,3 @@ def register_view(request):
 
 def lab7_page(request):
     return render(request, 'lab7.html')
-

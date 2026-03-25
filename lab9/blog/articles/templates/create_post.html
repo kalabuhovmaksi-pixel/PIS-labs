@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head><title>Новая статья</title></head>
+<head>
+    <meta charset="utf-8">
+    <title>Новая статья</title>
+    <link rel="stylesheet" href="{% load static %}{% static 'css/article.css' %}">
+</head>
 <body>
-  <h1>Создать статью</h1>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-  </form>
+
+    <div class="header">
+        <img src="{% static 'img/dpb-logo.jpg' %}" id="logo" alt="Logo">
+        <h1>Django public blog</h1>
+
+        <div class="auth-links">
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+        </div>
+    </div>
+
+    <div class="article-content">
+        <h1>Создать статью</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Сохранить</button>
+        </form>
+        
+        <a href="{% url 'home' %}">← Вернуться к архиву</a>
+    </div>
+
 </body>
 </html>

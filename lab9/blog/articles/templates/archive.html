@@ -11,6 +11,11 @@
     <div class="header">
         <img src="{% static 'img/dpb-logo.jpg' %}" id="logo" alt="Logo">
         <h1>Django public blog</h1>
+
+        <div class="auth-links">
+            <a href="{% url 'login' %}">Вход</a>
+            <a href="{% url 'register' %}">Регистрация</a>
+        </div>
     </div>
 
     <div class="parallax-wrapper">
@@ -18,13 +23,13 @@
         <div class="parallax-layer layer-front"></div>
 
         <div class="archive-content">
-            <a href="/article/new/">+ Новая статья</a>
+            <a href="{% url 'create_post' %}">+ Новая статья</a>
 
             {% for post in posts %}
                 <div class="one-post">
                     <div class="post-managment">
                         <h2 class="post-title">
-                            <a href="/article/{{ post.id }}/">{{ post.title }}</a>
+                            <a href="{% url 'article' article_id=post.id %}">{{ post.title }}</a>
                         </h2>
                         <p class="fold-button">Свернуть</p>
                     </div>

@@ -8,8 +8,11 @@ class Article(models.Model):
     text = models.TextField()
     created_date = models.DateField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('title', 'author')
+
     def __str__(self):
-        return f"{self.author.username}: {self.title}"
+        return f'{self.author.username}: {self.title}'
 
     def get_excerpt(self):
-        return self.text[:140] + "..." if len(self.text) > 140 else self.text
+        return self.text[:140] + '...' if len(self.text) > 140 else self.text
